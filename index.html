@@ -1,0 +1,307 @@
+
+<html>
+<head>
+    <title>Password Checker</title>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+     
+    <style>
+        
+        body {
+            font-family: Arial;
+            background: lightgray;
+            padding: 20px;
+        }
+        
+        .box {
+            background: white;
+            padding: 20px;
+            margin: auto;
+            width: 500px;
+            border-radius: 10px;
+        }
+        
+        h1 {
+            text-align: center;
+        }
+        
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        
+        .check {
+            margin: 5px 0;
+            color: red;
+        }
+        
+        .bar {
+            height: 20px;
+            background: #eee;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+        
+        .fill {
+            height: 100%;
+            width: 0%;
+            background: red;
+        }
+        
+        .result {
+            text-align: center;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+
+
+
+
+
+
+
+
+
+
+<body>
+    <div class="box">
+        <h1>Password Strength Checker <br> Version 1.2 </h1>
+        
+        <p>Type a password:</p>
+        
+        <!-- Password input box -->
+        <input type="password" id="pw" placeholder="Type here...">
+        
+        <!-- Checklist -->
+        <div id="checks">
+            <div class="check" id="ch1">✗ Needs 8+ letters</div>
+            <div class="check" id="ch2">✗ Needs A-Z</div>
+            <div class="check" id="ch3">✗ Needs a-z</div>
+            <div class="check" id="ch4">✗ Needs 0-9</div>
+            <div class="check" id="ch5">✗ Needs !@#$</div>
+        </div>
+        
+        <!-- Strength bar -->
+        <div class="bar">
+            <div class="fill" id="bar"></div>
+        </div>
+        
+        <!-- Result text -->
+        <div class="result" id="text">Too weak</div>
+        
+        <!-- Time estimate -->
+        <div style="background: #e0f7ff; padding: 15px; border-radius: 5px;">
+            <h3>Time to Crack:</h3>
+            <p id="time">Type a password first</p>
+        </div>
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+                      <!-- JavaScript code -->
+    <script>
+        // This function runs when you type
+        function check() {
+            // 1. Get the password
+            var pw = document.getElementById('pw').value;
+            
+            // 2. Reset all checks to red X
+            document.getElementById('ch1').innerHTML = '✗ Needs 8+ letters';
+            document.getElementById('ch1').style.color = 'red';
+            
+            document.getElementById('ch2').innerHTML = '✗ Needs A-Z';
+            document.getElementById('ch2').style.color = 'red';
+            
+            document.getElementById('ch3').innerHTML = '✗ Needs a-z';
+            document.getElementById('ch3').style.color = 'red';
+            
+            document.getElementById('ch4').innerHTML = '✗ Needs 0-9';
+            document.getElementById('ch4').style.color = 'red';
+            
+            document.getElementById('ch5').innerHTML = '✗ Needs !@#$';
+            document.getElementById('ch5').style.color = 'red';
+            
+            // 3. If empty, stop here
+            if (pw == "") {
+                document.getElementById('bar').style.width = '0%';
+                document.getElementById('bar').style.backgroundColor = 'red';
+                document.getElementById('text').innerHTML = 'Too weak';
+                document.getElementById('time').innerHTML = 'Type a password first';
+                return;
+            }
+            
+            // 4. Start counting points
+            var points = 0;
+            
+            // Check 1: Is it 8+ letters?
+            if (pw.length >= 8) {
+                points = points + 1;
+                document.getElementById('ch1').innerHTML = '✓ Has 8+ letters';
+                document.getElementById('ch1').style.color = 'green';
+            }
+            
+            // Check 2: Has A-Z?
+            var hasBig = false;
+            for (var i = 0; i < pw.length; i++) {
+                if (pw[i] >= 'A' && pw[i] <= 'Z') {
+                    hasBig = true;
+                    break;
+                }
+            }
+            if (hasBig) {
+                points = points + 1;
+                document.getElementById('ch2').innerHTML = '✓ Has A-Z';
+                document.getElementById('ch2').style.color = 'green';
+            }
+            
+            // Check 3: Has a-z?
+            var hasSmall = false;
+            for (var i = 0; i < pw.length; i++) {
+                if (pw[i] >= 'a' && pw[i] <= 'z') {
+                    hasSmall = true;
+                    break;
+                }
+            }
+            if (hasSmall) {
+                points = points + 1;
+                document.getElementById('ch3').innerHTML = '✓ Has a-z';
+                document.getElementById('ch3').style.color = 'green';
+            }
+            
+            // Check 4: Has 0-9?
+            var hasNum = false;
+            for (var i = 0; i < pw.length; i++) {
+                if (pw[i] >= '0' && pw[i] <= '9') {
+                    hasNum = true;
+                    break;
+                }
+            }
+            if (hasNum) {
+                points = points + 1;
+                document.getElementById('ch4').innerHTML = '✓ Has 0-9';
+                document.getElementById('ch4').style.color = 'green';
+            }
+            
+            // Check 5: Has special chars?
+            var specials = "!@#$%^&*()";
+            var hasSpecial = false;
+            for (var i = 0; i < pw.length; i++) {
+                if (specials.includes(pw[i])) {
+                    hasSpecial = true;
+                    break;
+                }
+            }
+            if (hasSpecial) {
+                points = points + 1;
+                document.getElementById('ch5').innerHTML = '✓ Has !@#$';
+                document.getElementById('ch5').style.color = 'green';
+            }
+            
+            // 5. Update the bar
+            var percent = (points / 5) * 100;
+            document.getElementById('bar').style.width = percent + '%';
+            
+            // 6. Set color and text based on points
+            if (points == 0) {
+                document.getElementById('bar').style.backgroundColor = 'red';
+                document.getElementById('text').innerHTML = 'Very Weak';
+            } else if (points == 1) {
+                document.getElementById('bar').style.backgroundColor = 'orange';
+                document.getElementById('text').innerHTML = 'Weak';
+            } else if (points == 2) {
+                document.getElementById('bar').style.backgroundColor = 'yellow';
+                document.getElementById('text').innerHTML = 'Okay';
+            } else if (points == 3) {
+                document.getElementById('bar').style.backgroundColor = 'lightgreen';
+                document.getElementById('text').innerHTML = 'Good';
+            } else if (points == 4) {
+                document.getElementById('bar').style.backgroundColor = 'green';
+                document.getElementById('text').innerHTML = 'Strong';
+            } else if (points == 5) {
+                document.getElementById('bar').style.backgroundColor = 'darkgreen';
+                document.getElementById('text').innerHTML = 'Very Strong!';
+            }
+            
+            // 7. Calculate time to crack (very simple)
+            calculateTime(pw, points);
+        }
+        
+        /////// Simple time calculator
+        function calculateTime(pw, points) {
+            var length = pw.length;
+            var timeElement = document.getElementById('time');
+            
+            //// Base time based on length
+            var time = 1;
+            if (length < 6) {
+                time = 1;
+            } else if (length < 8) {
+                time = 10;
+            } else if (length < 10) {
+                time = 100;
+            } else if (length < 12) {
+                time = 1000;
+            } else {
+                time = 10000;
+            }
+            
+            // Multiply by points
+            time = time * (points * 10);
+            
+            // Make it readable
+            var timeText;
+            if (time < 60) {
+                timeText = "seconds";
+            } else if (time < 3600) {
+                timeText = Math.round(time / 60) + " minutes";
+            } else if (time < 86400) {
+                timeText = Math.round(time / 3600) + " hours";
+            } else if (time < 31536000) {
+                timeText = Math.round(time / 86400) + " days";
+            } else {
+                timeText = Math.round(time / 31536000) + " years";
+            }
+            
+            // Show message
+            if (points <= 2) {
+                timeElement.innerHTML = "Could be cracked in " + timeText;
+                timeElement.style.color = "red";
+            } else if (points == 3) {
+                timeElement.innerHTML = "Might take " + timeText + " to crack";
+                timeElement.style.color = "orange";
+            } else if (points == 4) {
+                timeElement.innerHTML = "Good! Might take " + timeText + " to crack";
+                timeElement.style.color = "green";
+            } else {
+                timeElement.innerHTML = "Excellent! Might take " + timeText + " to crack";
+                timeElement.style.color = "darkgreen";
+            }
+        }
+        
+        // Make the input box call check() when typing
+        document.getElementById('pw').onkeyup = check;
+    </script>
+</body>
+</html>
